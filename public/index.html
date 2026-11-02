@@ -35,6 +35,9 @@
                     <span class="status-dot"></span>
                     <span class="status-label">Sarvam AI Connected</span>
                 </div>
+                <button id="key-config-btn" class="icon-btn" aria-label="Configure API Key" title="Configure Sarvam API Key">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-1.5 1.5L12 11l4 4 5.5-5.5a2.12 2.12 0 0 0 0-3L20 5a2.12 2.12 0 0 0-3 0l-1.5 1.5z"/><path d="M15.5 15.5L8.5 22.5a2.12 2.12 0 0 1-3 0L3.5 20.5a2.12 2.12 0 0 1 0-3L10.5 10.5"/></svg>
+                </button>
                 <button id="theme-toggle-btn" class="icon-btn" aria-label="Toggle Theme" title="Toggle Theme">
                     <svg class="sun-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
                     <svg class="moon-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -528,6 +531,30 @@
             <span>22 Official Languages: Assamese • Bengali • Bodo • Dogri • Gujarati • Hindi • Kannada • Kashmiri • Konkani • Maithili • Malayalam • Manipuri • Marathi • Nepali • Odia • Punjabi • Sanskrit • Santhali • Sindhi • Tamil • Telugu • Urdu</span>
         </p>
     </footer>
+
+    <!-- API Key Settings Modal -->
+    <div id="api-key-modal" class="modal-backdrop hidden">
+        <div class="modal-card card">
+            <div class="modal-header">
+                <h3>Sarvam API Key Configuration</h3>
+                <button id="close-modal-btn" class="icon-btn mini-close" title="Close">✕</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">Enter your Sarvam API Key below. It will be stored in your browser's local storage and used for all requests.</p>
+                <div class="input-field-group">
+                    <label for="custom-api-key-input">Sarvam API Key</label>
+                    <input type="password" id="custom-api-key-input" placeholder="sk_rio9uvc9_..." autocomplete="off">
+                </div>
+                <div class="modal-tip">
+                    <span>💡 Tip:</span> For permanent server-side deployment on Render, add <code>SARVAM_API_KEY</code> in Render's <strong>Environment</strong> tab.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="clear-api-key-btn" class="mini-btn danger-btn">Clear Stored Key</button>
+                <button id="save-api-key-btn" class="primary-btn" style="padding: 0.6rem 1.4rem; font-size: 0.9rem;">Save & Apply Key</button>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>

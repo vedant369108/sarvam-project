@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "ks-IN": "Kashmiri (कॉशुर)",
         "brx-IN": "Bodo (बड़ो)",
         "sat-IN": "Santhali (ᱥᱟᱱᱛᱟᱲᱤ)",
-        "mni-IN": "Manipuri (মৈতৈलोन्)"
+        "mni-IN": "Manipuri (মৈতৈলোন্)"
     };
 
     const SCRIPT_NAMES = {
@@ -44,8 +44,15 @@ document.addEventListener("DOMContentLoaded", () => {
         "Olck": "Ol Chiki (ᱥᱟᱱᱛᱟᱲᱤ)"
     };
 
-    // DOM Elements - Theme & Tabs
+    // DOM Elements - Theme, Key & Tabs
     const themeToggleBtn = document.getElementById("theme-toggle-btn");
+    const keyConfigBtn = document.getElementById("key-config-btn");
+    const apiKeyModal = document.getElementById("api-key-modal");
+    const closeModalBtn = document.getElementById("close-modal-btn");
+    const customApiKeyInput = document.getElementById("custom-api-key-input");
+    const saveApiKeyBtn = document.getElementById("save-api-key-btn");
+    const clearApiKeyBtn = document.getElementById("clear-api-key-btn");
+    const apiStatusBadge = document.getElementById("api-status-badge");
     const tabBtns = document.querySelectorAll(".tab-btn");
     const viewPanels = document.querySelectorAll(".view-panel");
 
@@ -124,19 +131,90 @@ document.addEventListener("DOMContentLoaded", () => {
     // Toast
     const toast = document.getElementById("toast");
 
+    // Helper: Build headers with stored API Key if present
+    function getAuthHeaders() {
+        const headers = { "Content-Type": "application/json" };
+        const customKey = localStorage.getItem("sarvam_custom_key");
+        if (customKey && customKey.trim()) {
+            headers["X-API-Key"] = customKey.trim();
+        }
+        return headers;
+    }
+
     // Health check on load
-    fetch("/api/health")
-        .then(r => r.json())
-        .then(data => {
-            const badge = document.getElementById("api-status-badge");
-            if (data.sarvam_connected) {
-                badge.querySelector(".status-label").textContent = "Sarvam AI Connected";
-            } else {
-                badge.querySelector(".status-label").textContent = "API Key Missing";
-                badge.style.color = "#f87171";
-            }
-        })
-        .catch(() => {});
+    function checkHealth() {
+        fetch("/api/health", { headers: getAuthHeaders() })
+            .then(r => r.json())
+            .then(data => {
+                const storedKey = localStorage.getItem("sarvam_custom_key");
+                if (data.sarvam_connected || (storedKey && storedKey.trim())) {
+                    apiStatusBadge.querySelector(".status-label").textContent = "Sarvam AI Connected";
+                    apiStatusBadge.style.color = "#34d399";
+                    apiStatusBadge.querySelector(".status-dot").style.backgroundColor = "#10b981";
+                } else {
+                    apiStatusBadge.querySelector(".status-label").textContent = "API Key Required";
+                    apiStatusBadge.style.color = "#f87171";
+                    apiStatusBadge.querySelector(".status-dot").style.backgroundColor = "#ef4444";
+                }
+            })
+            .catch(() => {});
+    }
+    checkHealth();
+
+    // API Key Modal Controls
+    if (keyConfigBtn) {
+        keyConfigBtn.addEventListener("click", () => openApiKeyModal());
+    }
+    if (apiStatusBadge) {
+        apiStatusBadge.addEventListener("click", () => openApiKeyModal());
+        apiStatusBadge.style.cursor = "pointer";
+    }
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener("click", () => closeApiKeyModal());
+    }
+    if (apiKeyModal) {
+        apiKeyModal.addEventListener("click", (e) => {
+            if (e.target === apiKeyModal) closeApiKeyModal();
+        });
+    }
+
+    function openApiKeyModal() {
+        const storedKey = localStorage.getItem("sarvam_custom_key") || "";
+        customApiKeyInput.value = storedKey;
+        apiKeyModal.classList.remove("hidden");
+        customApiKeyInput.focus();
+    }
+
+    function closeApiKeyModal() {
+        apiKeyModal.classList.add("hidden");
+    }
+
+    saveApiKeyBtn.addEventListener("click", () => {
+        const keyVal = customApiKeyInput.value.trim();
+        if (!keyVal) {
+            showToast("Please enter a valid Sarvam API key.");
+            return;
+        }
+        localStorage.setItem("sarvam_custom_key", keyVal);
+        showToast("Sarvam API key saved in browser!");
+        closeApiKeyModal();
+        checkHealth();
+    });
+
+    clearApiKeyBtn.addEventListener("click", () => {
+        localStorage.removeItem("sarvam_custom_key");
+        customApiKeyInput.value = "";
+        showToast("Stored API key cleared.");
+        checkHealth();
+    });
+
+    function handleApiError(err) {
+        const msg = err.message || String(err);
+        showToast(`Error: ${msg}`);
+        if (msg.includes("SARVAM_API_KEY") || msg.includes("api_key") || msg.includes("forbidden") || msg.includes("Invalid key")) {
+            setTimeout(openApiKeyModal, 600);
+        }
+    }
 
     // Theme Management
     const savedTheme = localStorage.getItem("sarvam_theme") || "dark";
@@ -339,7 +417,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const res = await fetch("/api/translate", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: getAuthHeaders(),
                 body: JSON.stringify(payload)
             });
 
@@ -368,7 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
         } catch (err) {
-            showToast(`Error: ${err.message}`);
+            handleApiError(err);
             targetPlaceholder.classList.remove("hidden");
         } finally {
             loadingSpinner.classList.add("hidden");
@@ -404,7 +482,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const base64 = await blobToBase64(blob);
         const res = await fetch("/api/speech-to-text", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
                 audio_base64: base64,
                 mime_type: mimeType || "audio/webm",
@@ -509,7 +587,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     showToast("No speech detected. Please speak closer to the microphone.");
                 }
             } catch (err) {
-                showToast("STT Error: " + err.message);
+                handleApiError(err);
             } finally {
                 loadingSpinner.classList.add("hidden");
                 document.getElementById("loading-text-msg").textContent = "Generating translation via Sarvam AI...";
@@ -528,7 +606,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 sttSendToTranslateBtn.disabled = !data.transcript;
                 sttMicStatus.textContent = "Transcription complete!";
             } catch (err) {
-                showToast("STT Error: " + err.message);
+                handleApiError(err);
                 sttMicStatus.textContent = "Error during transcription";
             } finally {
                 sttSpinner.classList.add("hidden");
@@ -571,7 +649,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 showToast("No speech detected in audio file.");
             }
         } catch (err) {
-            showToast("STT Error: " + err.message);
+            handleApiError(err);
         } finally {
             loadingSpinner.classList.add("hidden");
             document.getElementById("loading-text-msg").textContent = "Generating translation via Sarvam AI...";
@@ -627,7 +705,7 @@ document.addEventListener("DOMContentLoaded", () => {
             sttSendToTranslateBtn.disabled = !data.transcript;
             showToast("Transcription successful!");
         } catch (err) {
-            showToast("STT Error: " + err.message);
+            handleApiError(err);
         } finally {
             sttSpinner.classList.add("hidden");
             sttUploadTranscribeBtn.disabled = false;
@@ -677,7 +755,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const res = await fetch("/api/transliterate", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({
                     input: text,
                     source_language_code: translitSourceSelect.value,
@@ -693,7 +771,7 @@ document.addEventListener("DOMContentLoaded", () => {
             translitOutput.textContent = data.transliterated_text;
             translitCopyBtn.disabled = false;
         } catch (err) {
-            showToast(`Error: ${err.message}`);
+            handleApiError(err);
             translitOutput.textContent = "Error during transliteration.";
         } finally {
             transliterateBtn.disabled = false;
@@ -730,7 +808,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const res = await fetch("/api/identify", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: getAuthHeaders(),
                 body: JSON.stringify({ input: text })
             });
 
@@ -746,7 +824,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             identifyResultCard.classList.remove("hidden");
         } catch (err) {
-            showToast(`Error: ${err.message}`);
+            handleApiError(err);
         } finally {
             identifyBtn.disabled = false;
         }

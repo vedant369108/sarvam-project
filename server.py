@@ -21,13 +21,35 @@ if env_file.exists():
                 key, val = line.split("=", 1)
                 os.environ.setdefault(key.strip(), val.strip().strip("'\""))
 
-api_key = os.getenv("SARVAM_API_KEY")
-if not api_key:
-    print("WARNING: SARVAM_API_KEY is not set in environment or .env file.")
-
-client = SarvamAI(api_subscription_key=api_key) if api_key else None
-
 STATIC_DIR = Path(__file__).resolve().parent / "public"
+
+def get_sarvam_client(headers=None, req_data=None):
+    # 1. Environment variable
+    key = os.getenv("SARVAM_API_KEY")
+    if key and key.strip():
+        return SarvamAI(api_subscription_key=key.strip())
+
+    # 2. Custom header or body fallback
+    custom_key = None
+    if headers:
+        custom_key = headers.get("X-API-Key") or headers.get("x-api-key")
+    if not custom_key and req_data:
+        custom_key = req_data.get("api_key")
+
+    if custom_key and custom_key.strip():
+        return SarvamAI(api_subscription_key=custom_key.strip())
+
+    # 3. Reload .env just in case
+    if env_file.exists():
+        with open(env_file, "r", encoding="utf-8") as f:
+            for line in f:
+                if line.strip().startswith("SARVAM_API_KEY="):
+                    val = line.strip().split("=", 1)[1].strip().strip("'\"")
+                    if val:
+                        os.environ["SARVAM_API_KEY"] = val
+                        return SarvamAI(api_subscription_key=val)
+
+    return None
 
 class SarvamHandler(BaseHTTPRequestHandler):
     def _send_json(self, status_code, data):
@@ -37,7 +59,7 @@ class SarvamHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-API-Key, Authorization")
         self.end_headers()
         self.wfile.write(body)
 
@@ -45,13 +67,14 @@ class SarvamHandler(BaseHTTPRequestHandler):
         self.send_response(204)
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type, X-API-Key, Authorization")
         self.end_headers()
 
     def do_GET(self):
         url_path = self.path.split("?")[0]
 
         if url_path == "/api/health":
+            client = get_sarvam_client(headers=self.headers)
             self._send_json(200, {
                 "status": "ok",
                 "sarvam_connected": client is not None,
@@ -94,10 +117,6 @@ class SarvamHandler(BaseHTTPRequestHandler):
             self.send_error(404, "File Not Found")
 
     def do_POST(self):
-        if not client:
-            self._send_json(500, {"success": False, "error": "SARVAM_API_KEY is not configured on the server."})
-            return
-
         content_length = int(self.headers.get("Content-Length", 0))
         post_data = self.rfile.read(content_length)
 
@@ -105,6 +124,14 @@ class SarvamHandler(BaseHTTPRequestHandler):
             req_data = json.loads(post_data.decode("utf-8")) if post_data else {}
         except Exception:
             self._send_json(400, {"success": False, "error": "Invalid JSON payload"})
+            return
+
+        client = get_sarvam_client(headers=self.headers, req_data=req_data)
+        if not client:
+            self._send_json(500, {
+                "success": False,
+                "error": "SARVAM_API_KEY is not configured on the server. Please add SARVAM_API_KEY to your Render environment variables or click the Key icon in the header."
+            })
             return
 
         url_path = self.path.split("?")[0]
