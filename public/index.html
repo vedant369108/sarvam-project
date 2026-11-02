@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarvam Indic Studio | 22+ Indian Language Translation & Speech AI</title>
+    <meta name="description" content="State-of-the-art Indic language translation, transliteration, and speech-to-text suite powered by Sarvam AI models (Sarvam-Translate, Mayura, and Saaras).">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+    <div class="app-background">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+    </div>
+
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="logo-icon">
+                    <span class="om-symbol">अ</span>
+                    <span class="sparkle">✦</span>
+                </div>
+                <div class="brand-text">
+                    <h1>Sarvam Indic Studio</h1>
+                    <span class="tagline">Neural Translation, Transliteration & Speech AI across 22+ Indian Languages</span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="api-badge" id="api-status-badge">
+                    <span class="status-dot"></span>
+                    <span class="status-label">Sarvam AI Connected</span>
+                </div>
+                <button id="theme-toggle-btn" class="icon-btn" aria-label="Toggle Theme" title="Toggle Theme">
+                    <svg class="sun-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Navigation Tabs -->
+        <nav class="mode-tabs">
+            <button class="tab-btn active" data-tab="translate">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>
+                <span>Translate (Anuvad)</span>
+            </button>
+            <button class="tab-btn" data-tab="stt">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+                <span>Speech to Text (Saaras)</span>
+            </button>
+            <button class="tab-btn" data-tab="transliterate">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+                <span>Transliterate (Lipi Antaran)</span>
+            </button>
+            <button class="tab-btn" data-tab="identify">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6M8 11h6"/></svg>
+                <span>Detect Language</span>
+            </button>
+            <button class="tab-btn" data-tab="history">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span>History</span>
+            </button>
+        </nav>
+
+        <!-- TRANSLATION VIEW -->
+        <section id="view-translate" class="view-panel active">
+            <!-- Language Selection Toolbar -->
+            <div class="lang-selector-bar">
+                <div class="lang-picker-group">
+                    <label for="source-lang-select" class="picker-label">Source Language</label>
+                    <div class="custom-select-wrapper">
+                        <select id="source-lang-select" class="lang-select">
+                            <option value="auto">✨ Auto Detect</option>
+                            <option value="en-IN" selected>English (en-IN)</option>
+                            <option value="hi-IN">Hindi (हिन्दी)</option>
+                            <option value="bn-IN">Bengali (বাংলা)</option>
+                            <option value="mr-IN">Marathi (मराठी)</option>
+                            <option value="te-IN">Telugu (తెలుగు)</option>
+                            <option value="ta-IN">Tamil (தமிழ்)</option>
+                            <option value="gu-IN">Gujarati (ગુજરાતી)</option>
+                            <option value="ur-IN">Urdu (اردو)</option>
+                            <option value="kn-IN">Kannada (ಕನ್ನಡ)</option>
+                            <option value="od-IN">Odia (ଓଡ଼ିଆ)</option>
+                            <option value="ml-IN">Malayalam (മലയാളം)</option>
+                            <option value="pa-IN">Punjabi (ਪੰਜਾਬੀ)</option>
+                            <option value="as-IN">Assamese (অসমীয়া)</option>
+                            <option value="mai-IN">Maithili (मैथिली)</option>
+                            <option value="sa-IN">Sanskrit (संस्कृतम्)</option>
+                            <option value="ne-IN">Nepali (नेपाली)</option>
+                            <option value="kok-IN">Konkani (कोंकणी)</option>
+                            <option value="sd-IN">Sindhi (سنڌي)</option>
+                            <option value="doi-IN">Dogri (डोगरी)</option>
+                            <option value="ks-IN">Kashmiri (कॉशुर)</option>
+                            <option value="brx-IN">Bodo (बड़ो)</option>
+                            <option value="sat-IN">Santhali (ᱥᱟᱱᱛᱟᱲᱤ)</option>
+                            <option value="mni-IN">Manipuri (মৈতৈলোন্)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button id="swap-lang-btn" class="swap-btn" title="Swap Source and Target Languages">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="m16 3 4 4-4 4"/><path d="M20 7H4"/><path d="m8 21-4-4 4-4"/><path d="M4 17h16"/></svg>
+                </button>
+
+                <div class="lang-picker-group">
+                    <label for="target-lang-select" class="picker-label">Target Language</label>
+                    <div class="custom-select-wrapper">
+                        <select id="target-lang-select" class="lang-select">
+                            <option value="hi-IN" selected>Hindi (हिन्दी)</option>
+                            <option value="en-IN">English (en-IN)</option>
+                            <option value="bn-IN">Bengali (বাংলা)</option>
+                            <option value="mr-IN">Marathi (मराठी)</option>
+                            <option value="te-IN">Telugu (తెలుగు)</option>
+                            <option value="ta-IN">Tamil (தமிழ்)</option>
+                            <option value="gu-IN">Gujarati (ગુજરાતી)</option>
+                            <option value="ur-IN">Urdu (اردو)</option>
+                            <option value="kn-IN">Kannada (ಕನ್ನಡ)</option>
+                            <option value="od-IN">Odia (ଓଡ଼ିଆ)</option>
+                            <option value="ml-IN">Malayalam (മലയാളം)</option>
+                            <option value="pa-IN">Punjabi (ਪੰਜਾਬੀ)</option>
+                            <option value="as-IN">Assamese (অসমীয়া)</option>
+                            <option value="mai-IN">Maithili (मैथिली)</option>
+                            <option value="sa-IN">Sanskrit (संस्कृतम्)</option>
+                            <option value="ne-IN">Nepali (नेपाली)</option>
+                            <option value="kok-IN">Konkani (कोंकणी)</option>
+                            <option value="sd-IN">Sindhi (سنڌي)</option>
+                            <option value="doi-IN">Dogri (डोगरी)</option>
+                            <option value="ks-IN">Kashmiri (कॉशुर)</option>
+                            <option value="brx-IN">Bodo (बड़ो)</option>
+                            <option value="sat-IN">Santhali (ᱥᱟᱱᱛᱟᱲᱤ)</option>
+                            <option value="mni-IN">Manipuri (মৈতৈলোন্)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Model Configuration Accordion -->
+            <div class="advanced-settings-card">
+                <div class="settings-header" id="toggle-settings-btn">
+                    <div class="settings-title">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <span>Model Parameters & Nuances</span>
+                    </div>
+                    <span class="settings-chevron">▼</span>
+                </div>
+                <div class="settings-body" id="settings-body">
+                    <div class="param-grid">
+                        <div class="param-item">
+                            <label for="model-choice">Sarvam Model</label>
+                            <select id="model-choice">
+                                <option value="sarvam-translate:v1" selected>sarvam-translate:v1 (High Accuracy & Formal)</option>
+                                <option value="mayura:v1">mayura:v1 (Conversational & Transliteration)</option>
+                            </select>
+                            <span class="param-help">Sarvam-Translate excels at official/long-form text; Mayura excels at modern styles.</span>
+                        </div>
+
+                        <div class="param-item">
+                            <label for="mode-choice">Style & Register</label>
+                            <select id="mode-choice">
+                                <option value="formal" selected>Formal</option>
+                                <option value="modern-colloquial">Modern Colloquial (Everyday speech)</option>
+                                <option value="classic-colloquial">Classic Colloquial</option>
+                                <option value="code-mixed">Code-Mixed (Hinglish/Tanglish)</option>
+                            </select>
+                        </div>
+
+                        <div class="param-item">
+                            <label for="gender-choice">Speaker Gender Tone</label>
+                            <select id="gender-choice">
+                                <option value="">Auto / Neutral</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                            <span class="param-help">Inflects verbs appropriately for gendered Indic languages.</span>
+                        </div>
+
+                        <div class="param-item">
+                            <label for="numerals-choice">Numeral Formatting</label>
+                            <select id="numerals-choice">
+                                <option value="international" selected>International (1, 2, 3)</option>
+                                <option value="native">Native Indic (१, २, ३)</option>
+                            </select>
+                        </div>
+
+                        <div class="param-item" id="output-script-group">
+                            <label for="script-choice">Output Script</label>
+                            <select id="script-choice">
+                                <option value="fully-native" selected>Fully Native Script (e.g. हिन्दी)</option>
+                                <option value="roman">Romanized / Latin Script</option>
+                                <option value="spoken-form-in-native">Spoken Form in Native</option>
+                            </select>
+                            <span class="param-help">Applies when using Mayura engine.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dual Editor Layout -->
+            <div class="editor-grid">
+                <!-- Source Editor Card -->
+                <div class="card editor-card">
+                    <div class="editor-header">
+                        <span class="editor-title" id="source-display-title">Source Text</span>
+                        <div class="editor-actions">
+                            <!-- Voice Input (Mic) in Source Editor -->
+                            <button id="mic-quick-btn" class="mini-btn mic-btn" title="Speak to input text via Sarvam Saaras STT">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+                                <span id="mic-quick-text">Voice Input</span>
+                            </button>
+                            <button id="audio-upload-trigger-btn" class="mini-btn" title="Upload audio file to transcribe">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                <span>Upload Audio</span>
+                            </button>
+                            <input type="file" id="source-audio-file" accept="audio/*" style="display:none;">
+                            <button id="paste-btn" class="mini-btn" title="Paste text">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+                                <span>Paste</span>
+                            </button>
+                            <button id="clear-btn" class="mini-btn" title="Clear text">
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                <span>Clear</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="editor-body">
+                        <textarea id="source-input" placeholder="Enter text in English or any Indian language, or click 'Voice Input' to speak... (Press Ctrl + Enter to translate)" rows="8"></textarea>
+                    </div>
+
+                    <div class="editor-footer">
+                        <div class="sample-chips-bar">
+                            <span class="chips-label">Try:</span>
+                            <button class="chip-btn" data-text="Welcome to India! Our diversity and culture are our greatest strengths.">Welcome</button>
+                            <button class="chip-btn" data-text="Please verify your email address to complete your application.">Official Notice</button>
+                            <button class="chip-btn" data-text="Bro, are we still meeting for chai this evening?">Colloquial</button>
+                            <button class="chip-btn" data-text="The railway station is just 2 kilometers away from the city center.">Travel Query</button>
+                        </div>
+                        <div class="counter" id="char-counter">0 chars • 0 words</div>
+                    </div>
+                </div>
+
+                <!-- Target Editor Card -->
+                <div class="card editor-card target-card">
+                    <div class="editor-header">
+                        <div class="target-title-wrap">
+                            <span class="editor-title" id="target-display-title">Hindi Translation</span>
+                            <span id="model-tag-badge" class="model-badge">sarvam-translate:v1</span>
+                        </div>
+                        <div class="editor-actions">
+                            <button id="speak-btn" class="mini-btn" title="Listen (Text to Speech)" disabled>
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+                                <span>Listen</span>
+                            </button>
+                            <button id="copy-btn" class="mini-btn" title="Copy Translation" disabled>
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                <span id="copy-btn-text">Copy</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="editor-body">
+                        <div id="target-placeholder" class="target-placeholder">
+                            <div class="empty-state-graphic">
+                                <span class="indic-char">नमस्ते</span>
+                            </div>
+                            <p>Translated output will appear here with rich Indic typography.</p>
+                        </div>
+                        <div id="target-output" class="target-output-text hidden"></div>
+                        <div id="loading-spinner" class="loading-overlay hidden">
+                            <div class="spinner"></div>
+                            <span class="loading-text" id="loading-text-msg">Generating translation via Sarvam AI...</span>
+                        </div>
+                    </div>
+
+                    <div class="editor-footer">
+                        <div id="latency-badge" class="latency-info">Ready</div>
+                        <div class="counter" id="target-char-counter">0 chars</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Translate Action Trigger -->
+            <div class="action-dock">
+                <button id="translate-btn" class="primary-btn glow-btn">
+                    <span class="btn-icon">⚡</span>
+                    <span class="btn-text">Translate Now</span>
+                    <kbd class="shortcut-kbd">Ctrl + ↵</kbd>
+                </button>
+            </div>
+        </section>
+
+        <!-- SPEECH TO TEXT VIEW (DEDICATED STT STUDIO) -->
+        <section id="view-stt" class="view-panel">
+            <div class="stt-container card">
+                <div class="section-intro">
+                    <h2>Speech to Text (Saaras STT)</h2>
+                    <p>Accurately transcribe audio in 10+ Indian languages and English, including code-mixed speech (Hinglish/Tanglish), powered by Sarvam's Saaras model.</p>
+                </div>
+
+                <div class="stt-controls-grid">
+                    <div class="stt-record-card card inner-card">
+                        <div class="stt-card-header">
+                            <span class="editor-title">Option 1: Microphone Recording</span>
+                            <span class="stt-model-badge">saaras:v3</span>
+                        </div>
+                        <div class="stt-card-body">
+                            <div class="mic-circle-wrapper">
+                                <button id="stt-mic-main-btn" class="mic-main-circle" title="Click to Record">
+                                    <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+                                </button>
+                                <div id="stt-recording-waves" class="recording-waves hidden">
+                                    <span></span><span></span><span></span><span></span><span></span>
+                                </div>
+                            </div>
+                            <div id="stt-mic-status" class="stt-status-text">Click microphone to start speaking</div>
+                            <div id="stt-recording-timer" class="stt-timer hidden">00:00</div>
+                        </div>
+                    </div>
+
+                    <div class="stt-upload-card card inner-card">
+                        <div class="stt-card-header">
+                            <span class="editor-title">Option 2: Audio File Upload</span>
+                            <span class="file-types-hint">WAV, MP3, M4A, OGG, WEBM</span>
+                        </div>
+                        <div class="stt-card-body">
+                            <div class="drop-zone" id="stt-drop-zone">
+                                <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                                <p class="drop-text">Drag & drop an audio file here or <label for="stt-file-input" class="file-browse-btn">browse</label></p>
+                                <input type="file" id="stt-file-input" accept="audio/*" style="display:none;">
+                                <div id="stt-selected-file" class="selected-file-label hidden"></div>
+                            </div>
+                            <button id="stt-upload-transcribe-btn" class="primary-btn" style="margin-top: 1rem; width: 100%;" disabled>
+                                <span>Transcribe Uploaded File</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STT Result Area -->
+                <div class="card inner-card stt-result-card">
+                    <div class="editor-header">
+                        <div class="target-title-wrap">
+                            <span class="editor-title">Transcribed Speech</span>
+                            <span id="stt-detected-lang-badge" class="model-badge hidden">Detected: —</span>
+                        </div>
+                        <div class="editor-actions">
+                            <button id="stt-send-to-translate-btn" class="mini-btn" title="Send text to Translation Studio" disabled>
+                                <span>Send to Translate ↗</span>
+                            </button>
+                            <button id="stt-copy-btn" class="mini-btn" title="Copy transcript" disabled>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="editor-body">
+                        <div id="stt-transcript-output" class="target-output-text translit-result-box empty">Transcription will appear here...</div>
+                        <div id="stt-spinner" class="loading-overlay hidden">
+                            <div class="spinner"></div>
+                            <span class="loading-text">Processing speech via Sarvam Saaras AI...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRANSLITERATION VIEW -->
+        <section id="view-transliterate" class="view-panel">
+            <div class="transliterate-container card">
+                <div class="section-intro">
+                    <h2>Phonetic Transliteration (Lipi Antaran)</h2>
+                    <p>Convert romanized phonetic spelling directly into authentic native Indian scripts without altering pronunciation.</p>
+                </div>
+
+                <div class="transliterate-controls">
+                    <div class="lang-picker-group">
+                        <label for="translit-source-select">Input Language / Script</label>
+                        <select id="translit-source-select" class="lang-select">
+                            <option value="en-IN" selected>English / Roman (en-IN)</option>
+                            <option value="hi-IN">Hindi (hi-IN)</option>
+                            <option value="bn-IN">Bengali (bn-IN)</option>
+                            <option value="gu-IN">Gujarati (gu-IN)</option>
+                            <option value="kn-IN">Kannada (kn-IN)</option>
+                            <option value="ml-IN">Malayalam (ml-IN)</option>
+                            <option value="mr-IN">Marathi (mr-IN)</option>
+                            <option value="od-IN">Odia (od-IN)</option>
+                            <option value="pa-IN">Punjabi (pa-IN)</option>
+                            <option value="ta-IN">Tamil (ta-IN)</option>
+                            <option value="te-IN">Telugu (te-IN)</option>
+                        </select>
+                    </div>
+
+                    <div class="lang-picker-group">
+                        <label for="translit-target-select">Target Native Script</label>
+                        <select id="translit-target-select" class="lang-select">
+                            <option value="hi-IN" selected>Hindi / Devanagari (हिन्दी)</option>
+                            <option value="bn-IN">Bengali (বাংলা)</option>
+                            <option value="mr-IN">Marathi (मराठी)</option>
+                            <option value="te-IN">Telugu (తెలుగు)</option>
+                            <option value="ta-IN">Tamil (தமிழ்)</option>
+                            <option value="gu-IN">Gujarati (ગુજરાતી)</option>
+                            <option value="kn-IN">Kannada (ಕನ್ನಡ)</option>
+                            <option value="ml-IN">Malayalam (മലയാളം)</option>
+                            <option value="pa-IN">Punjabi (ਪੰਜਾਬੀ)</option>
+                            <option value="od-IN">Odia (ଓଡ଼ିଆ)</option>
+                            <option value="en-IN">English / Latin</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="editor-grid translit-grid">
+                    <div class="card inner-card">
+                        <div class="editor-header">
+                            <span class="editor-title">Phonetic Romanized Input</span>
+                        </div>
+                        <div class="editor-body">
+                            <textarea id="translit-input" placeholder="Type words like 'namaste', 'kaise ho', 'dhanyawad', 'vanakkam'..." rows="6"></textarea>
+                        </div>
+                        <div class="editor-footer">
+                            <div class="sample-chips-bar">
+                                <span class="chips-label">Try:</span>
+                                <button class="chip-translit-btn" data-text="sarvam ai bharat ka sarvashreshtha ai platform hai">Sarvam AI Platform</button>
+                                <button class="chip-translit-btn" data-text="aapka bohot bohot shukriya aur shubhkaamnaayein">Shukriya</button>
+                                <button class="chip-translit-btn" data-text="mera naam vedant hai aur main mumbai se hoon">Introduction</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card inner-card">
+                        <div class="editor-header">
+                            <span class="editor-title">Target Script Result</span>
+                            <button id="translit-copy-btn" class="mini-btn" title="Copy text" disabled>
+                                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                <span>Copy</span>
+                            </button>
+                        </div>
+                        <div class="editor-body">
+                            <div id="translit-output" class="translit-result-box empty">Native script appears here...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-dock">
+                    <button id="transliterate-btn" class="primary-btn">
+                        <span>Convert Script (Transliterate)</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- IDENTIFY VIEW -->
+        <section id="view-identify" class="view-panel">
+            <div class="identify-container card">
+                <div class="section-intro">
+                    <h2>Language & Script Detection</h2>
+                    <p>Detect the exact Indian language and native script used in any paragraph or sentence using Sarvam's language classifier.</p>
+                </div>
+
+                <div class="editor-body">
+                    <textarea id="identify-input" placeholder="Paste any text in any language or script (e.g. தமிழ், తెలుగు, বাংলা, اردو, हिन्दी)..." rows="5"></textarea>
+                </div>
+
+                <div class="sample-chips-bar" style="margin: 1rem 0;">
+                    <span class="chips-label">Examples:</span>
+                    <button class="chip-identify-btn" data-text="தமிழ்நாடு இந்தியாவின் தென்பகுதியில் உள்ள ஒரு மாநிலமாகும்.">Tamil Sample</button>
+                    <button class="chip-identify-btn" data-text="భారతదేశం సంస్కృతి మరియు సంప్రదాయాల గని.">Telugu Sample</button>
+                    <button class="chip-identify-btn" data-text="পশ্চিমবঙ্গ পূর্ব ভারতের একটি গুরুত্বপূর্ণ রাজ্য।">Bengali Sample</button>
+                    <button class="chip-identify-btn" data-text="सत्यमेव जयते नानृतं सत्येन पन्था विततो देवयानः।">Sanskrit Sample</button>
+                </div>
+
+                <button id="identify-btn" class="primary-btn">
+                    <span>Analyze Language & Script</span>
+                </button>
+
+                <div id="identify-result-card" class="identify-result-card hidden">
+                    <div class="result-badge-row">
+                        <div class="result-metric">
+                            <span class="metric-label">Detected Language</span>
+                            <span class="metric-value" id="detect-lang-name">—</span>
+                            <span class="metric-sub" id="detect-lang-code">—</span>
+                        </div>
+                        <div class="result-metric">
+                            <span class="metric-label">Script Family</span>
+                            <span class="metric-value" id="detect-script-name">—</span>
+                            <span class="metric-sub" id="detect-script-code">—</span>
+                        </div>
+                        <div class="result-metric">
+                            <span class="metric-label">Confidence</span>
+                            <span class="metric-value text-emerald">High (Sarvam AI)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HISTORY VIEW -->
+        <section id="view-history" class="view-panel">
+            <div class="history-container card">
+                <div class="history-header">
+                    <div>
+                        <h2>Translation History</h2>
+                        <p>Locally stored history of your recent translations.</p>
+                    </div>
+                    <button id="clear-history-btn" class="danger-btn">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        <span>Clear All History</span>
+                    </button>
+                </div>
+
+                <div id="history-list" class="history-list">
+                    <div class="empty-history">No translations recorded yet. Try translating some sentences!</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden"></div>
+
+    <footer class="app-footer">
+        <p>Built with <strong>Sarvam AI</strong> — Sarvam-Translate, Mayura, Saaras STT, and Token Factory.</p>
+        <p class="languages-badge-strip">
+            <span>22 Official Languages: Assamese • Bengali • Bodo • Dogri • Gujarati • Hindi • Kannada • Kashmiri • Konkani • Maithili • Malayalam • Manipuri • Marathi • Nepali • Odia • Punjabi • Sanskrit • Santhali • Sindhi • Tamil • Telugu • Urdu</span>
+        </p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
